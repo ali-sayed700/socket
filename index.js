@@ -58,11 +58,11 @@
 
 // { user, post, type }
 
+const iserver = "https://socket-vf1h.onrender.com"
 
-
-const io = require("socket.io")(4000, {
+const io = require("socket.io")(iserver, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://f-uture.web.app",
   },
 });
 
