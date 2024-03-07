@@ -12,7 +12,7 @@
 //   // return activeUsers.find((user) => user.newUserId === id);
 //   let test = activeUsers.find((user) => user.newUserId === id);
 //   console.log(test);
-  
+
 // };
 // io.on("connection", (socket) => {
 //   // add new User
@@ -26,43 +26,61 @@
 //     io.emit("get-users", activeUsers);
 //   });
 
-  // socket.on("disconnect", () => {
-  //   // remove user from active users
-  //   activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-  //   console.log("User Disconnected", activeUsers);
-  //   // send all active users to all users
-  //   io.emit("get-users", activeUsers);
-  // });
+// socket.on("disconnect", () => {
+//   // remove user from active users
+//   activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+//   console.log("User Disconnected", activeUsers);
+//   // send all active users to all users
+//   io.emit("get-users", activeUsers);
+// });
 
-  // send message to a specific user
-  // socket.on("send-message", (data) => {
-  //   const { receiverId } = data;
-  //   const user = activeUsers.find((user) => user.userId === receiverId);
-  //   console.log("Sending from socket to :", receiverId);
-  //   console.log("Data: ", data);
-  //   if (user) {
-  //     io.to(user.socketId).emit("recieve-message", data);
-  //   }
-  // });
-  // socket.on("sendNotification", ( { user }) => {
-    // const receiver = getUser(user._id);
-  //  getUser(user._id);
-    // console.log(receiver);
-    // console.log(receiver);
-    // io.to(receiver.socketId).emit("getNotification", {
-    //   post,
-    //   type,
-    // });
-  // });
+// send message to a specific user
+// socket.on("send-message", (data) => {
+//   const { receiverId } = data;
+//   const user = activeUsers.find((user) => user.userId === receiverId);
+//   console.log("Sending from socket to :", receiverId);
+//   console.log("Data: ", data);
+//   if (user) {
+//     io.to(user.socketId).emit("recieve-message", data);
+//   }
+// });
+// socket.on("sendNotification", ( { user }) => {
+// const receiver = getUser(user._id);
+//  getUser(user._id);
+// console.log(receiver);
+// console.log(receiver);
+// io.to(receiver.socketId).emit("getNotification", {
+//   post,
+//   type,
+// });
+// });
 // });
 
 // { user, post, type }
 
+import axios from "axios";
+
+// const API = axios.create({ baseURL: "https://f-ututr.onrender.com" });
+// // const API = axios.create({ baseURL: "http://localhost:8000" });
+
+
+// API.interceptors.request.use((req) => {
+//   if (localStorage.getItem("token")) {
+//     req.headers.Authorization = `Bearer ${JSON.parse(
+//       localStorage.getItem("token")
+//     )}`;
+//   }
+
+//   return req;
+// });
 
 
 const io = require("socket.io")(4000, {
   cors: {
     origin: "https://f-uture.web.app",
+    methods: ["GET", "POST" ,"PUT","PATCH" ,"DELETE","HEAD"],
+    allowedHeaders: ["*" ,'Content-Encoding' ,"Access-Control-Allow-Headers" ,"Origin"],
+    credentials: true
   },
 });
 
@@ -78,7 +96,7 @@ io.on("connection", (socket) => {
 
   socket.on("new-user-add", (newUserId) => {
     // if user is not added previously
-    if (!activeUsers.some((user) => user.userId === newUserId)) { 
+    if (!activeUsers.some((user) => user.userId === newUserId)) {
       activeUsers.push({ userId: newUserId, socketId: socket.id });
       console.log("New User Connected", activeUsers);
     }
@@ -91,30 +109,30 @@ io.on("connection", (socket) => {
 
 
   socket.on("send-message", (data) => {
-    const {receiverId} = data
+    const { receiverId } = data
     const receiver = getUser(receiverId);
-  try {
-   
-    if(receiver)
-    io.to(receiver.socketId).emit("recieve-message", data);
-  } catch (error) {
-    return error
-  }
+    try {
+
+      if (receiver)
+        io.to(receiver.socketId).emit("recieve-message", data);
+    } catch (error) {
+      return error
+    }
   });
 
 
-  
+
 
   socket.on("sendNotification", (data) => {
     // console.log(data);
-    const {reciverId} = data
+    const { reciverId } = data
     const receiverNotif = getUser(reciverId);
     try {
-      
-        if(receiverNotif)
-      io.to(receiverNotif.socketId).emit("getNotification", data);
+
+      if (receiverNotif)
+        io.to(receiverNotif.socketId).emit("getNotification", data);
     } catch (error) {
-        return error
+      return error
     }
   });
 
@@ -131,4 +149,5 @@ io.on("connection", (socket) => {
 
 });
 
-// console.log(onlineUsers);
+
+// httpServer.listen(4000);
