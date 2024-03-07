@@ -58,7 +58,7 @@
 
 // { user, post, type }
 
-import axios from "axios";
+// import axios from "axios";
 
 // const API = axios.create({ baseURL: "https://f-ututr.onrender.com" });
 // // const API = axios.create({ baseURL: "http://localhost:8000" });
